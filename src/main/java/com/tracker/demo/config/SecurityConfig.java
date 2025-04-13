@@ -33,10 +33,6 @@ public class SecurityConfig {
                 .authorizeHttpRequests(authz -> authz
                         .requestMatchers("/auth/signup").permitAll()
                         .requestMatchers("/auth/signin").permitAll()
-                        .requestMatchers("/api/workers/**").hasAnyAuthority("ADMIN", "SUPERADMIN")
-                        .requestMatchers("/api/departments/**").hasAnyAuthority("ADMIN", "SUPERADMIN")
-                        .requestMatchers("/api/notification/sendToAll/**").hasAnyAuthority("ADMIN", "SUPERADMIN")
-                        .requestMatchers("/api/notification/allusers/**").hasAnyAuthority("ADMIN", "SUPERADMIN")
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                         .anyRequest().authenticated()
                 )

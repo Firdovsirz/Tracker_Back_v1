@@ -30,6 +30,14 @@ public class JwtFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
 
+        String path = request.getRequestURI();
+
+        // 🚫 Skip filter for public endpoints
+        if (path.equals("/auth/signin") || path.equals("/auth/signup")) {
+            filterChain.doFilter(request, response);
+            return;
+        }
+
         String authHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
         if (authHeader == null || !authHeader.startsWith("Bearer ")) {
             filterChain.doFilter(request, response);
@@ -41,12 +49,11 @@ public class JwtFilter extends OncePerRequestFilter {
             String email = jwtUtil.extractEmail(token);
             List<String> roles = jwtUtil.extractRoles(token);
 
-            logger.info("User: " + email + " | Roles: " + roles); // Debug roles
-
-            // Add "ROLE_" prefix to match Spring Security format
+            logger.info("User: " + email + " | Roles: " + roles);
             System.out.println("User: " + email + " | Roles: " + roles);
+
             var authorities = roles.stream()
-                    .map(role -> new SimpleGrantedAuthority(role))
+                    .map(SimpleGrantedAuthority::new)
                     .collect(Collectors.toList());
 
             User user = new User(email, "", authorities);
