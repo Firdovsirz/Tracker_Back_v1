@@ -49,10 +49,10 @@ public class SecurityConfig {
     @Bean
     public UrlBasedCorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration config = new CorsConfiguration();
-        config.setAllowedOrigins(List.of("*"));  // Allow all origins
+        config.setAllowedOrigins(List.of("https://trackerfrontv1-production.up.railway.app/"));  // Allow all origins
         config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         config.setAllowedHeaders(List.of("Authorization", "Content-Type"));
-        config.setAllowCredentials(false);  // MUST be false when allowedOrigins is "*"
+        config.setAllowCredentials(true);  // MUST be false when allowedOrigins is "*"
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", config);
