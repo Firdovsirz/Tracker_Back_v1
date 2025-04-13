@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.Optional;
 
-@CrossOrigin(origins = "https://trackerfrontv1-production.up.railway.app")
+@CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("/auth")
 public class AuthController {
@@ -40,7 +40,6 @@ public class AuthController {
         }
     }
 
-    @CrossOrigin(origins = "https://trackerfrontv1-production.up.railway.app")
     @PostMapping("/signin")
     public ResponseEntity<ApiResponse<?>> signin(@RequestBody User user) {
         try {

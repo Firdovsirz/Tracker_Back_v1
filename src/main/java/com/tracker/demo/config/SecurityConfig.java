@@ -37,24 +37,24 @@ public class SecurityConfig {
                         .requestMatchers("/api/departments/**").hasAnyAuthority("ADMIN", "SUPERADMIN")
                         .requestMatchers("/api/notification/sendToAll/**").hasAnyAuthority("ADMIN", "SUPERADMIN")
                         .requestMatchers("/api/notification/allusers/**").hasAnyAuthority("ADMIN", "SUPERADMIN")
-                        .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()  // Allow OPTIONS requests
+                        .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore((Filter) jwtFilter, UsernamePasswordAuthenticationFilter.class)
-                .cors().configurationSource(corsConfigurationSource());
+                .cors(cors -> cors.configurationSource(corsConfigurationSource()));
 
         return http.build();
     }
 
     @Bean
     public UrlBasedCorsConfigurationSource corsConfigurationSource() {
-        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         CorsConfiguration config = new CorsConfiguration();
-        config.setAllowedOrigins(List.of("https://trackerfrontv1-production.up.railway.app"));
-        config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));  // Make sure OPTIONS is allowed
+        config.setAllowedOrigins(List.of("*"));  // Allow all origins
+        config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         config.setAllowedHeaders(List.of("Authorization", "Content-Type"));
-        config.setAllowCredentials(true);
+        config.setAllowCredentials(false);  // MUST be false when allowedOrigins is "*"
 
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", config);
         return source;
     }
