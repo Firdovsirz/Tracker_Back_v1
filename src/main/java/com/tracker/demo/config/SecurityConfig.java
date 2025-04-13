@@ -51,11 +51,10 @@ public class SecurityConfig {
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         CorsConfiguration config = new CorsConfiguration();
         config.setAllowedOrigins(List.of("https://trackerfrontv1-production.up.railway.app"));
-        config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));  // Ensure OPTIONS is allowed
+        config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));  // Make sure OPTIONS is allowed
         config.setAllowedHeaders(List.of("Authorization", "Content-Type"));
-        config.setAllowCredentials(true);  // Make sure credentials are allowed
+        config.setAllowCredentials(true);
 
-        // Add the CORS configuration to the source
         source.registerCorsConfiguration("/**", config);
         return source;
     }
