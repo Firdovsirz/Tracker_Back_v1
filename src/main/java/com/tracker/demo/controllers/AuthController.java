@@ -40,7 +40,7 @@ public class AuthController {
         }
     }
 
-    @CrossOrigin(origins = "http://localhost:5173")
+    @CrossOrigin(origins = "https://trackerfrontv1-production.up.railway.app")
     @PostMapping("/signin")
     public ResponseEntity<ApiResponse<?>> signin(@RequestBody User user) {
         try {
