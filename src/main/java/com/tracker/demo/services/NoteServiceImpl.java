@@ -23,7 +23,7 @@ public class NoteServiceImpl implements NoteService {
 
     @Override
     public Optional<Note> findBySerialNumber(BigDecimal serialNumber) {
-        return Optional.empty();
+        return noteRepository.findBySerialNumber(serialNumber);
     }
 
     @Override

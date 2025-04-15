@@ -14,6 +14,7 @@ import java.util.List;
 import java.util.Optional;
 import java.math.BigDecimal;
 
+@CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("/api")
 public class NoteController {
@@ -62,5 +63,35 @@ public class NoteController {
     @GetMapping("note/serial/{serialNumber}")
     public Optional<Note> getNoteBySerialNumber(@PathVariable BigDecimal serialNumber) {
         return noteService.findBySerialNumber(serialNumber);
+    }
+
+    @PreAuthorize("hasRole('1')")
+    @PatchMapping("/note/update/{serialNumber}")
+    public ResponseEntity<?> updateNote(@PathVariable BigDecimal serialNumber, @RequestBody Note updatedNote) {
+        try {
+            Optional<Note> optionalNote = noteService.findBySerialNumber(serialNumber);
+            if (optionalNote.isEmpty()) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                        .body(ApiResponse.error(404, "NOT_FOUND", "Note not found with ID: " + serialNumber));
+            }
+
+            Note existingNote = optionalNote.get();
+
+            if (updatedNote.getNoteTitle() != null) {
+                existingNote.setNoteTitle(updatedNote.getNoteTitle());
+            }
+            if (updatedNote.getNoteDesc() != null) {
+                existingNote.setNoteDesc(updatedNote.getNoteDesc());
+            }
+            if (updatedNote.getSerialNumber() != null) {
+                existingNote.setSerialNumber(updatedNote.getSerialNumber());
+            }
+
+            Note savedNote = noteService.saveNote(existingNote);
+            return ResponseEntity.ok(ApiResponse.success(savedNote));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(ApiResponse.error(500, "INTERNAL_SERVER_ERROR", e.getMessage()));
+        }
     }
 }
