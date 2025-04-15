@@ -3,21 +3,21 @@ package com.tracker.demo.DTO;
 import com.tracker.demo.DTO.ErrorDetailsDTO;
 
 public class ApiResponse<T> {
+    private String statusMessage;
     private int status;
     private T data;
-    private String errorCode;
 
-    public ApiResponse(int status, T data, String errorCode) {
+    public ApiResponse(int status, T data, String statusMessage) {
         this.status = status;
         this.data = data;
-        this.errorCode = errorCode;
+        this.statusMessage = statusMessage;
     }
 
     public static <T> ApiResponse<T> success(T data) {
         return new ApiResponse<>(200, data, null);
     }
     public static <T> ApiResponse<T> created(T data) {
-        return new ApiResponse<>(201, data, null);
+        return new ApiResponse<>(201, data, "Successfully created.");
     }
 
     public static ApiResponse<ErrorDetailsDTO> error(int status, String errorCode, String message) {
@@ -44,13 +44,12 @@ public class ApiResponse<T> {
         this.data = data;
     }
 
-    // Getter/Setter for errorCode
+    // Getter/Setter for statusMessage
 
-    public String getErrorCode() {
-        return errorCode;
+    public String getStatusMessage() {
+        return statusMessage;
     }
-
-    public void setErrorCode(String errorCode) {
-        this.errorCode = errorCode;
+    public void setStatusMessage(String statusMessage) {
+        this.statusMessage = statusMessage;
     }
 }

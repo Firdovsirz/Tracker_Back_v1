@@ -33,6 +33,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(authz -> authz
                         .requestMatchers("/auth/signup").permitAll()
                         .requestMatchers("/auth/signin").permitAll()
+//                        .requestMatchers("/api/create/note").permitAll()
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                         .anyRequest().authenticated()
                 )

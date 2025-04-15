@@ -1,7 +1,6 @@
 package com.tracker.demo.util;
 
 import org.springframework.stereotype.Component;
-
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
 import java.nio.charset.StandardCharsets;
@@ -41,7 +40,7 @@ public class JwtUtil {
         }
     }
 
-    // Validate JWT Token Manually
+    // Validate JWT Token
     public boolean validateToken(String token) {
         try {
             String[] parts = token.split("\\.");
@@ -63,12 +62,12 @@ public class JwtUtil {
         }
     }
 
-    // Extract Email
-    public String extractEmail(String token) {
+    // ✅ Extract Username
+    public String extractUsername(String token) {
         try {
             String payload = token.split("\\.")[1];
             Map<String, Object> payloadMap = new ObjectMapper().readValue(base64UrlDecode(payload), Map.class);
-            return (String) payloadMap.get("email");
+            return (String) payloadMap.get("username");
         } catch (Exception e) {
             return null;
         }
@@ -85,11 +84,12 @@ public class JwtUtil {
         }
     }
 
-    // Create HMAC-SHA256 Signature
+    // ✅ Correct HMAC-SHA256 Signature
     private static String createSignature(String data) throws Exception {
         Mac hmac = Mac.getInstance("HmacSHA256");
         hmac.init(new SecretKeySpec(SECRET_KEY.getBytes(StandardCharsets.UTF_8), "HmacSHA256"));
-        return base64UrlEncode(Arrays.toString(hmac.doFinal(data.getBytes(StandardCharsets.UTF_8))));
+        byte[] rawHmac = hmac.doFinal(data.getBytes(StandardCharsets.UTF_8));
+        return Base64.getUrlEncoder().withoutPadding().encodeToString(rawHmac);
     }
 
     // Base64 URL Encode

@@ -1,0 +1,66 @@
+package com.tracker.demo.controllers;
+
+import com.tracker.demo.DTO.ApiResponse;
+import com.tracker.demo.entity.Note;
+import com.tracker.demo.services.NoteService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import java.util.List;
+import java.util.Optional;
+import java.math.BigDecimal;
+
+@RestController
+@RequestMapping("/api")
+public class NoteController {
+
+    private final NoteService noteService;
+    private static final Logger logger = LoggerFactory.getLogger(NoteController.class);
+
+    @Autowired
+    public NoteController(NoteService noteService) {
+        this.noteService = noteService;
+    }
+
+    @PreAuthorize("hasRole('1')")
+    @PostMapping("/create/note")
+    public Object createNote(@RequestBody Note note) {
+        logger.info("Received note creation request: {}", note);
+        try {
+            Note savedNote = noteService.saveNote(note);
+            return ResponseEntity.status(HttpStatus.OK)
+                    .body(ApiResponse.created(savedNote));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(ApiResponse.error(
+                            500, "INTERNAL_SERVER_ERROR", e.getMessage()
+                    ));
+        }
+    }
+
+    @PreAuthorize("hasRole('1')")
+    @GetMapping("/note/user/{username}")
+    public ResponseEntity<?> getNotesByUsername(@PathVariable String username) {
+        try {
+            List<Note> notes = noteService.findByUsername(username);
+            if (notes == null || notes.isEmpty()) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                        .body(ApiResponse.error(404, "NOT_FOUND", "No notes found for username: " + username));
+            }
+            return ResponseEntity.status(HttpStatus.OK).body(ApiResponse.success(notes));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(ApiResponse.error(500, "INTERNAL_SERVER_ERROR", e.getMessage()));
+        }
+    }
+
+    // Get a note by serial number
+    @GetMapping("note/serial/{serialNumber}")
+    public Optional<Note> getNoteBySerialNumber(@PathVariable BigDecimal serialNumber) {
+        return noteService.findBySerialNumber(serialNumber);
+    }
+}

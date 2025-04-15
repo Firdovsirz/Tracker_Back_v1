@@ -1,5 +1,4 @@
 package com.tracker.demo.filter;
-
 import com.tracker.demo.util.JwtUtil;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -32,7 +31,7 @@ public class JwtFilter extends OncePerRequestFilter {
 
         String path = request.getRequestURI();
 
-        // 🚫 Skip filter for public endpoints
+        // Skip filter for public endpoints
         if (path.equals("/auth/signin") || path.equals("/auth/signup")) {
             filterChain.doFilter(request, response);
             return;
@@ -46,17 +45,16 @@ public class JwtFilter extends OncePerRequestFilter {
 
         String token = authHeader.substring(7);
         if (jwtUtil.validateToken(token)) {
-            String email = jwtUtil.extractEmail(token);
-            List<String> roles = jwtUtil.extractRoles(token);
+            String username = jwtUtil.extractUsername(token);  // ✅ Get 'username' from JWT
+            List<String> roles = jwtUtil.extractRoles(token);  // ✅ Get roles (e.g. ["1"])
 
-            logger.info("User: " + email + " | Roles: " + roles);
-            System.out.println("User: " + email + " | Roles: " + roles);
+            logger.info("User: " + username + " | Roles: " + roles);
 
             var authorities = roles.stream()
-                    .map(SimpleGrantedAuthority::new)
+                    .map(role -> new SimpleGrantedAuthority("ROLE_" + role)) // Optional prefix
                     .collect(Collectors.toList());
 
-            User user = new User(email, "", authorities);
+            User user = new User(username, "", authorities);
             UsernamePasswordAuthenticationToken authentication =
                     new UsernamePasswordAuthenticationToken(user, null, authorities);
             SecurityContextHolder.getContext().setAuthentication(authentication);
