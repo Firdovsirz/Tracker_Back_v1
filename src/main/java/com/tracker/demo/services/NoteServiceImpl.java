@@ -2,6 +2,7 @@ package com.tracker.demo.services;
 
 import com.tracker.demo.DTO.NoteRepository;
 import com.tracker.demo.entity.Note;
+import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -29,5 +30,11 @@ public class NoteServiceImpl implements NoteService {
     @Override
     public Note saveNote(Note note) {
         return noteRepository.save(note);
+    }
+
+    @Transactional
+    @Override
+    public long deleteNote(BigDecimal serialNumber) {
+        return noteRepository.deleteBySerialNumber(serialNumber);
     }
 }

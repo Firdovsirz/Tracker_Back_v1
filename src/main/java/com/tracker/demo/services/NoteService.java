@@ -1,7 +1,6 @@
 package com.tracker.demo.services;
 
 import com.tracker.demo.entity.Note;
-import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -11,4 +10,5 @@ public interface NoteService {
     List<Note> findByUsername(String username);
     Optional<Note> findBySerialNumber(BigDecimal serialNumber);
     Note saveNote(Note note);
+    long deleteNote(BigDecimal serialNumber);
 }

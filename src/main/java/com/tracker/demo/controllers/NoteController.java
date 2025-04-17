@@ -3,6 +3,7 @@ package com.tracker.demo.controllers;
 import com.tracker.demo.DTO.ApiResponse;
 import com.tracker.demo.entity.Note;
 import com.tracker.demo.services.NoteService;
+import org.apache.coyote.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -90,6 +91,28 @@ public class NoteController {
             Note savedNote = noteService.saveNote(existingNote);
             return ResponseEntity.ok(ApiResponse.success(savedNote));
         } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(ApiResponse.error(500, "INTERNAL_SERVER_ERROR", e.getMessage()));
+        }
+    }
+
+    @PreAuthorize("hasRole('1')")
+    @DeleteMapping("/note/delete/{serialNumber}")
+    public ResponseEntity<?> deleteNote(@PathVariable BigDecimal serialNumber) {
+        try {
+            Optional<Note> optionalNote = noteService.findBySerialNumber(serialNumber);
+            System.out.println(optionalNote.isPresent());
+            if (optionalNote.isEmpty()) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                        .body(ApiResponse.error(404, "NOT_FOUND", "Note not found with ID: " + serialNumber));
+            }
+            System.out.println("Deleting note: " + serialNumber);
+            Note existingNote = optionalNote.get();
+            System.out.println(existingNote.getNoteTitle());
+            noteService.deleteNote(serialNumber);
+            return ResponseEntity.ok(ApiResponse.success(existingNote));
+        } catch (Exception e) {
+            logger.error("Error while deleting note", e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body(ApiResponse.error(500, "INTERNAL_SERVER_ERROR", e.getMessage()));
         }
