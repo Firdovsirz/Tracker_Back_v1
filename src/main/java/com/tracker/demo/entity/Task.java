@@ -38,8 +38,11 @@ public class Task {
     @Column(name = "status")
     private Integer status;
 
-    @Column(name = "fullfilment")
-    private Integer fullfilment;
+    @Column(name = "fulfillment")
+    private Integer fulfillment;
+
+    @Column(name = "is_private")
+    private Integer isPrivate;
 
    // constructor
 
@@ -53,7 +56,9 @@ public class Task {
                 Date deadline,
                 Date deletedAt,
                 Integer status,
-                Integer fullfilment
+                Integer fulfillment,
+                Integer isPrivate
+
     ) {
         this.id = id;
         this.username = username;
@@ -64,7 +69,8 @@ public class Task {
         this.deadline = deadline;
         this.deletedAt = deletedAt;
         this.status = status;
-        this.fullfilment = fullfilment;
+        this.fulfillment = fulfillment;
+        this.isPrivate = isPrivate;
     }
 
     public Task() {}
@@ -141,12 +147,20 @@ public class Task {
         this.status = status;
     }
 
-    public Integer getFullfilment() {
-        return fullfilment;
+    public Integer getFulfillment() {
+        return fulfillment;
     }
 
-    public void setFullfilment(Integer fullfilment) {
-        this.fullfilment = fullfilment;
+    public void setFulfillment(Integer fullfilment) {
+        this.fulfillment = fullfilment;
+    }
+
+    public Integer getIsPrivate() {
+        return isPrivate;
+    }
+
+    public void setIsPrivate(Integer isPrivate) {
+        this.isPrivate = isPrivate;
     }
 
     // To String
@@ -163,7 +177,8 @@ public class Task {
                 ", deadline=" + deadline +
                 ", deletedAt=" + deletedAt +
                 ", status=" + status +
-                ", fullfilment=" + fullfilment +
+                ", fulfilment=" + fulfillment +
+                ", isPrivate=" + isPrivate +
                 '}';
     }
 
@@ -178,8 +193,8 @@ public class Task {
         if (this.status == null) {
             this.status = 0; // or any default status
         }
-        if (this.fullfilment == null) {
-            this.fullfilment = 0; // or any default value
+        if (this.fulfillment == null) {
+            this.fulfillment = 0; // or any default value
         }
     }
 

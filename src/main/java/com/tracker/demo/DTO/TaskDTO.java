@@ -13,8 +13,19 @@ public class TaskDTO {
     private Date deletedAt;
     private Integer status;
     private Integer fullfilment;
+    private Integer isPrivate;
 
-    public TaskDTO(Long id, BigDecimal serialNumber, String taskTitle, String taskDesc, Date createdAt, Date deadline, Date deletedAt, Integer status, Integer fullfilment) {
+    public TaskDTO(
+            Long id,
+            BigDecimal serialNumber,
+            String taskTitle,
+            String taskDesc,
+            Date createdAt,
+            Date deadline,
+            Date deletedAt,
+            Integer status,
+            Integer fullfilment
+    ) {
         this.id = id;
         this.serialNumber = serialNumber;
         this.taskTitle = taskTitle;
@@ -24,6 +35,7 @@ public class TaskDTO {
         this.deletedAt = deletedAt;
         this.status = status;
         this.fullfilment = fullfilment;
+        this.isPrivate = isPrivate;
     }
 
     public Long getId() {
@@ -90,11 +102,19 @@ public class TaskDTO {
         this.status = status;
     }
 
-    public Integer getFullfilment() {
+    public Integer getFulfillment() {
         return fullfilment;
     }
 
-    public void setFullfilment(Integer fullfilment) {
+    public void setFullfillment(Integer fullfilment) {
         this.fullfilment = fullfilment;
+    }
+
+    public Integer getIsPrivate() {
+        return isPrivate;
+    }
+
+    public void setIsPrivate(Integer isPrivate) {
+        this.isPrivate = isPrivate;
     }
 }
