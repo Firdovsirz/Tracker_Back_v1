@@ -45,13 +45,13 @@ public class JwtFilter extends OncePerRequestFilter {
 
         String token = authHeader.substring(7);
         if (jwtUtil.validateToken(token)) {
-            String username = jwtUtil.extractUsername(token);  // ✅ Get 'username' from JWT
-            List<String> roles = jwtUtil.extractRoles(token);  // ✅ Get roles (e.g. ["1"])
+            String username = jwtUtil.extractUsername(token);
+            List<String> roles = jwtUtil.extractRoles(token);
 
             logger.info("User: " + username + " | Roles: " + roles);
 
             var authorities = roles.stream()
-                    .map(role -> new SimpleGrantedAuthority("ROLE_" + role)) // Optional prefix
+                    .map(role -> new SimpleGrantedAuthority("ROLE_" + role))
                     .collect(Collectors.toList());
 
             User user = new User(username, "", authorities);

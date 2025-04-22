@@ -40,7 +40,6 @@ public class JwtUtil {
         }
     }
 
-    // Validate JWT Token
     public boolean validateToken(String token) {
         try {
             String[] parts = token.split("\\.");
